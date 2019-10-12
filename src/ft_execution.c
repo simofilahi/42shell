@@ -59,14 +59,14 @@ void	ft_print_jobctr(t_jobctr *st_jobctr)
 	st_tokens = NULL;
 	while (st_jobctr)
 	{
-		dprintf(2,"\n------- Start job_ctr-------\n");
-		st_tokens = st_jobctr->st_tokens;
-		while (st_tokens != NULL)
-		{
-			dprintf(2, " <%s>  ",st_tokens->value);
-			st_tokens = st_tokens->next;
-		}
-		dprintf(2,"\n--------------\n");
+		// dprintf(2,"\n------- Start job_ctr-------\n");
+		// st_tokens = st_jobctr->st_tokens;
+		// while (st_tokens != NULL)
+		// {
+		// 	dprintf(2, " <%s>  ",st_tokens->value);
+		// 	st_tokens = st_tokens->next;
+		// }
+		// dprintf(2,"\n--------------\n");
 		ft_print_logopr(st_jobctr->st_logopr);
 		st_jobctr = st_jobctr->next;
 	}
@@ -287,7 +287,7 @@ int				ft_cmd_fork(int fork_it, t_pipes *st_pipes)
 	environ = (st_pipes->tmp_env) ? st_pipes->tmp_env : g_environ;
 	
 	//
-	AliasMatched(st_pipes->args);
+	aliasmatched(st_pipes->args);
 	/// Check if Builtens
 	if (st_pipes && ft_check_built(st_pipes->args[0]))
 		return (ft_init_built(st_pipes, &(st_pipes->tmp_env))); ///  add return to ft_init_built

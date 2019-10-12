@@ -186,8 +186,8 @@ int						ft_buil_type(char **args, char **tmpenv);
 void					ft_buil_env(char **args, char ***tmp_env);
 void					ft_buil_export(t_tokens *st_tokens);
 void					ft_buil_unset(char **args);
-int						ft_buil_alias(char **arg);
-int						ft_buil_unalias(char **args);
+void            		ft_buil_alias(t_tokens *st_tokens);
+int						ft_buil_unalias(t_tokens *st_token);
 void					ft_buil_updatealias(char **args);
 
 /*

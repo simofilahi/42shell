@@ -1,12 +1,12 @@
 #include "shell.h"
 
-void AliasMatched(char **args)
+void aliasmatched(char **args)
 {
 	t_aliaspkg *data;
 	t_alias *curr;
 	char *tmp;
 
-	data = StoreAddrStruct(NULL);
+	data = storeaddrstruct(NULL);
 	tmp = ft_strjoin(args[0], "=");
 	curr = data->head_ref;
 	while (curr)
@@ -21,12 +21,12 @@ void AliasMatched(char **args)
 	}
 }
 
-void PrintList()
+void printlist()
 {
 	t_aliaspkg *data;
 	t_alias *curr;
 
-	data = StoreAddrStruct(NULL);
+	data = storeaddrstruct(NULL);
 	curr = data->head_ref;
 	while (curr)
 	{
@@ -36,13 +36,13 @@ void PrintList()
 	}
 }
 
-void PrintElement(char *shortcut)
+void printelement(char *shortcut)
 {
 	t_aliaspkg  *data;
 	t_alias		*curr;
 	char		*tmp;
 
-	data = StoreAddrStruct(NULL);
+	data = storeaddrstruct(NULL);
 	curr = data->head_ref;
 	tmp = ft_strjoin(shortcut, "=");
 	while (curr)
@@ -60,7 +60,7 @@ void PrintElement(char *shortcut)
 	ft_print_error("not found", "42sh: alias: ", shortcut, 0);
 }
 
-int isEqualFound(char *arg)
+int isequalfound(char *arg)
 {
 	if (arg[0] == '=')
 		return (0);
@@ -73,29 +73,38 @@ int isEqualFound(char *arg)
 	return (0);
 }
 
-int  ft_buil_alias(char **args)
-{
-	t_aliaspkg *data;
-	int			i;
+/*
+** export alias
+*/
 
-	data = StoreAddrStruct(NULL);
-	if (!args[0])
-		PrintList();
-	else 
-	{
-		// for test;
-		//args = ft_strsplit("m=m", ' ');
-		// args[0] = ft_strdup("zzz=");
-		i = 0;
-		while (args[i])
-		{
-			// ft_putendl_fd(args[i], 2);
-			if (isEqualFound(args[i]))
-				PushToList(args[i], data, 0);
-			else
-				PrintElement(args[i]);
+void            ft_buil_alias(t_tokens *st_tokens)
+{
+    int i;
+    char    *arg;
+
+    i = 1;
+    arg = NULL;
+    st_tokens = st_tokens->next;
+    (!st_tokens) ? printlist() : NULL;
+    while (st_tokens)
+    {
+        if (st_tokens->indx == i)
+        {
+            if (NEXT && NEXT->token == T_EQUAL && NEXT->indx == st_tokens->indx)
+            {
+                arg = ft_strjoir("", st_tokens->value, 0);
+                arg = ft_strjoir(arg, NEXT->value, 1);
+                if (NEXT && NEXT->next && NEXT->next->indx == st_tokens->indx)
+                    arg = ft_strjoir(arg, NEXT->next->value, 1);
+				printf("arg = %s \n",arg);
+				removealiasbyelemorbyflag(arg, 0);
+                pushtolist(arg, 0);
+                ft_strdel(&arg);
+            }
+            else
+                printelement(st_tokens->value);
 			i++;
 		}
-	}
-	return (1);
+        st_tokens = st_tokens->next;
+    }
 }

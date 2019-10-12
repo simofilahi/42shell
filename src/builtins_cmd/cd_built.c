@@ -77,9 +77,9 @@ char *get_path(char **arg, char **tmpenv, int flag)
     if (*(arg + 0) && *(arg + 1))
         return (ft_putstr("42sh: cd: too many arguments\n") ? NULL : NULL);
     else if (*(arg) == NULL && !flag)
-        return (ft_get_vrb("HOME",  g_environ));
+        return (ft_get_vrb("HOME",  (tmpenv) ? tmpenv : g_environ));
     else if (*(arg) && *(arg)[0] == '-' && !*(arg + 1))
-        return (ft_get_vrb("OLDPWD",  g_environ));
+        return (ft_get_vrb("OLDPWD",  (tmpenv) ? tmpenv : g_environ));
     return (ft_strdup(*arg));
 }
 
@@ -139,13 +139,22 @@ char        *correct_path(char *path, t_cdpkg v)
     return (ret);
 }
 
-void        cd_symblink(char **pwd, char **oldpwd, t_cdpkg v, char ***env, int *var)
+// not completed;
+
+void        cd_symbpath(char **pwd, char **oldpwd, t_cdpkg v, char ***env, int *var)
 {
     int flag;
 
     (void)env;
     flag = 0;
-    if (v.path[0] == '.' && v.path[1] == '.' && v.path[2] == '/' && (flag = 1))
+    char buffer[1024] = {0};
+
+    readlink(v.path, buffer, 1024);
+    ft_putstr_fd("here buff ", 1);
+    ft_putendl_fd(buffer, 1);
+    if (v.path[0] == '/')
+        v.path = ft_strdup(buffer); 
+    else if (v.path[0] == '.' && v.path[1] == '.' && v.path[2] == '/' && (flag = 1) && *env == NULL)
         v.path = correct_path(v.path, v);
     else if (((ft_strcmp(v.path, ".") == 0 || ft_strcmp(v.path, "./") == 0) ||\
             (ft_strcmp(v.path, *pwd) == 0 && ft_strcmp(v.path, *oldpwd) == 0)) &&\
@@ -161,11 +170,13 @@ void        cd_symblink(char **pwd, char **oldpwd, t_cdpkg v, char ***env, int *
     ft_strdel(oldpwd);
     *pwd = ft_get_vrb("PWD",  g_environ);
     *oldpwd = ft_get_vrb("OLDPWD",  g_environ);
+      ft_putstr("here path   =====> ");
+    ft_putendl_fd(v.path, 2);
     chdir(v.path);
     *var = 1;
 }
 
-void    cd_ordlink(char **pwd, char **oldpwd, t_cdpkg v, char ***env, int *var)
+void    cd_ordpath(char **pwd, char **oldpwd, t_cdpkg v, char ***env, int *var)
 {
     (void)env;
     if (*var)
@@ -201,8 +212,8 @@ int		ft_buil_cd(char **arg, char **env)
         (!(v.flag == P_flg) && var &&\
         (ft_strcmp(v.path, ".") == 0 ||\
          ft_strcmp(v.path, "./") == 0)))
-        cd_symblink(&pwd, &oldpwd, v, &env, &var);
+        cd_symbpath(&pwd, &oldpwd, v, &env, &var);
     else
-        cd_ordlink(&pwd, &oldpwd, v, &env, &var);
+        cd_ordpath(&pwd, &oldpwd, v, &env, &var);
     return (1);
 }

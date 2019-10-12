@@ -1,8 +1,5 @@
-vv=vv
-bb=bb
-w=who
-l=ls
-e=echo
-ww=whoami
-tt=tt
 rr=rr
+vv=vv
+cc=cc
+l=ls -la
+w=who

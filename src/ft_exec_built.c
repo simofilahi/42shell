@@ -59,9 +59,9 @@ int			ft_call_built(t_pipes *st_pipes, char ***tmp_env)
 	else if (ft_strcmp((st_pipes->args)[0], "type") == 0 && (rtn = 1))
 		ft_buil_type(&(st_pipes->args)[1], *tmp_env);
 	else if (ft_strcmp((st_pipes->args)[0], "alias") == 0 && (rtn = 1))
-		ft_buil_alias(&(st_pipes->args)[1]);
+		ft_buil_alias(st_pipes->st_tokens);
 	else if (ft_strcmp((st_pipes->args)[0], "unalias") == 0 && (rtn = 1))
-		ft_buil_unalias(&(st_pipes->args)[1]);
+		ft_buil_unalias(st_pipes->st_tokens);
 	else if (ft_strcmp((st_pipes->args)[0], "source") == 0 && (rtn = 1))
 		ft_buil_updatealias(&(st_pipes->args)[1]);
 	while (st_pipes->st_redir != NULL)

@@ -85,10 +85,10 @@ int echo_options(char **arg, int *flag);
 ** ALIAS FUNCTIONS
 */
 
-t_aliaspkg *StoreAddrStruct(t_aliaspkg *addr);
-void PushToList(char *string, t_aliaspkg *data, int flag);
-int RemoveAliasByElemOrByflag(char *shortcut, int check);
-void ImportAliasFileContent();
-void CreateAliasFile();
-void AliasMatched(char **args);
+t_aliaspkg *storeaddrstruct(t_aliaspkg *addr);
+void pushtolist(char *string, int flag);
+int removealiasbyelemorbyflag(char *shortcut, int check);
+void importaliasfilecontent();
+void createaliasfile();
+void aliasmatched(char **args);
 #endif

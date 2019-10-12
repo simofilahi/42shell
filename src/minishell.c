@@ -79,6 +79,15 @@ void		ft_multi_cmd(char *str_cmds, int bl_subsh)
 	ft_strdel(&str_cmds);
 }
 
+void initalias()
+{
+	t_aliaspkg *data;
+
+	data = ft_memalloc(sizeof(data));
+	storeaddrstruct(data);
+	createaliasfile();
+	importaliasfilecontent();
+}
 
 int			main(void)
 {
@@ -86,7 +95,6 @@ int			main(void)
 	char		*str_cmds;
 	t_history	*his;
 	t_select	*select;
-	t_aliaspkg *data;
 
 	g_intern = NULL;
 	if (ft_set_termcap() == -1)
@@ -96,10 +104,7 @@ int			main(void)
 	// Duplicate environ vrbs
 	g_environ = ft_strr_dup(environ, ft_strrlen(environ));
 	his->path = ft_get_vrb("PATH", g_environ);
-	data = ft_memalloc(sizeof(data));
-	StoreAddrStruct(data);
-	CreateAliasFile();
-	ImportAliasFileContent();
+	initalias();
 	while (1337)
 	{
 		ft_putstr("\033[0;32m42sh $>\033[0m ");

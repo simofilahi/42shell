@@ -1,6 +1,6 @@
 #include "shell.h"
 
-t_aliaspkg *StoreAddrStruct(t_aliaspkg *addr)
+t_aliaspkg *storeaddrstruct(t_aliaspkg *addr)
 {
 	static t_aliaspkg *ret;
 
@@ -11,11 +11,13 @@ t_aliaspkg *StoreAddrStruct(t_aliaspkg *addr)
 	return (ret);
 }
 
-void PushToList(char *string, t_aliaspkg *data, int flag)
+void pushtolist(char *string, int flag)
 {
 	t_alias *node;
+	t_aliaspkg *data;
 	int	i;
 	
+	data = storeaddrstruct(NULL);
 	if (!(node = (t_alias *)malloc(sizeof(t_alias))))
 		return ;
 	i = -1;
@@ -34,23 +36,19 @@ void PushToList(char *string, t_aliaspkg *data, int flag)
 	}
 }
 
-void CreateAliasFile()
+void createaliasfile()
 {
 	if (!(access("42shrc", F_OK) == 0))
-		open("42shrc", O_WRONLY | O_CREAT, 0777);
-	else
-		open("42shrc", O_WRONLY);
+		open("42shrc", O_CREAT, 0777);
 }
 
-void ImportAliasFileContent()
+void importaliasfilecontent()
 {
-	t_aliaspkg *data;
 	char	*line;
 	int	fd;
-
+	
 	line = NULL;
-	data = StoreAddrStruct(NULL);
 	fd = open("42shrc", O_RDONLY);
 	while (get_next_line(fd, &line))
-		PushToList(line, data, 1);
+		pushtolist(line, 1);
 }
