@@ -91,4 +91,5 @@ int removealiasbyelemorbyflag(char *shortcut, int check);
 void importaliasfilecontent();
 void createaliasfile();
 void aliasmatched(char **args);
+char *handleqoutes(char *str);
 #endif

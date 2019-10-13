@@ -24,7 +24,7 @@ void pushtolist(char *string, int flag)
 	while (string[++i] && string[i] != '=')
 		;
 	node->shortcut = ft_strsub(string, 0, ++i);
-	node->cmd = ft_strsub(string, i, ft_strlen(string) - 1);
+	node->cmd = handleqoutes(ft_strdup(string+i));
 	node->flag = flag;
 	node->next = NULL;
 	if (!data->head_ref && !data->tail_ref)

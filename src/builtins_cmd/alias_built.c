@@ -4,21 +4,23 @@ char *handleqoutes(char *str)
 {
 	char *tmp;
 	int		i;
+	int		j;
+	int		a;
 
 	if (str[0] != '\'' && str[0] != '"')
 		return (str);
 	else 
 	{
-		i = 1;
-		while (str[i])
-		{
-			if (str[i] == '\'' || str[i] == '"')
-				break ;
-			i++;
-		}
+		j = 0;
+		while (str[j] && (str[j] == '\'' || str[j] == '"'))
+			j++;
+		a = str[j - 1];
+		i = j - 1;
+		while (str[++i] && str[i] != a)
+			;
 	}
 	tmp =  str;
-	str = ft_strsub(str, 1, i - 1);
+	str = ft_strsub(str, j, i - j);
 	ft_strdel(&tmp);
 	return (str);
 }
@@ -37,8 +39,8 @@ void aliasmatched(char **args)
 		if (ft_strcmp(curr->shortcut, tmp) == 0)
 		{
 			ft_strdel(&args[0]);
-			args[0] = handleqoutes(ft_strdup(curr->cmd));
-			// args[0] = ft_strdup(curr->cmd);
+//			args[0] = handleqoutes(ft_strdup(curr->cmd));
+			 args[0] = ft_strdup(curr->cmd);
 			break ;
 		}
 		curr = curr->next;
