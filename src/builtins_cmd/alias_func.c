@@ -45,10 +45,19 @@ void createaliasfile()
 void importaliasfilecontent()
 {
 	char	*line;
+	char	*tmp;
+	int		i;
 	int	fd;
 	
 	line = NULL;
 	fd = open("42shrc", O_RDONLY);
 	while (get_next_line(fd, &line))
+	{
+		i = 0;
+		while (line[i] && line[i] != '=')
+			i++;
+		tmp = ft_strsub(line, 0, i);
+		removealiasbyelemorbyflag(tmp, 0);
 		pushtolist(line, 1);
+	}
 }

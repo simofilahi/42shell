@@ -2,4 +2,4 @@ rr=rr
 vv=vv
 cc=cc
 l=ls -la
-w=who
+w='who'

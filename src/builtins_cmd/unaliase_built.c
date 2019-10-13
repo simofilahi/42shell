@@ -1,36 +1,8 @@
 #include "shell.h"
 
-int removealiasbyelemorbyflag(char *shortcut, int check)
+
+int removealiasbyelemorbyflag_2(t_aliaspkg *data, t_alias *curr, t_alias *prev , int flag)
 {
-	t_aliaspkg *data;
-	t_alias *curr;
-	t_alias *prev;
-	int	flag;
-	
-	flag = 0;
-	data = storeaddrstruct(NULL);
-   
-	if (data->head_ref == NULL)
-		return(0) ;
-	curr = prev = data->head_ref;
-	// this line for test
-    if (!check)
-    {
-        // shortcut[ft_strlen(shortcut) - 1] = '\0';
-        shortcut = ft_strjoin(shortcut, "=");
-		ft_putendl_fd("here shortcut ", 1);
-		ft_putendl_fd(shortcut, 1);
-    }
-	while (curr)
-	{
-		if ((ft_strcmp(curr->shortcut, shortcut) == 0) || (curr->flag && check))
-        {
-            flag = 1;
-			break ;
-        }
-		prev = curr;
-		curr = curr->next;
-	}
 	if (curr == data->head_ref && flag)
 		data->head_ref = curr->next;
 	else if (curr == data->tail_ref && flag)
@@ -49,6 +21,35 @@ int removealiasbyelemorbyflag(char *shortcut, int check)
             data->tail_ref = NULL;
         return (1);
 	}
+	return (0);
+}
+
+int removealiasbyelemorbyflag(char *shortcut, int check)
+{
+	t_aliaspkg *data;
+	t_alias *curr;
+	t_alias *prev;
+	int	flag;
+	
+	flag = 0;
+	data = storeaddrstruct(NULL);
+	if (data->head_ref == NULL)
+		return(0) ;
+	curr = prev = data->head_ref;
+    if (!check)
+        shortcut = ft_strjoin(shortcut, "=");
+	while (curr)
+	{
+		if ((ft_strcmp(curr->shortcut, shortcut) == 0) || (curr->flag && check))
+        {
+            flag = 1;
+			break ;
+        }
+		prev = curr;
+		curr = curr->next;
+	}
+	if (removealiasbyelemorbyflag_2(data, curr, prev, flag))
+		return (1);
     return (0);
 }
 

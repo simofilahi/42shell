@@ -1,5 +1,28 @@
 #include "shell.h"
 
+char *handleqoutes(char *str)
+{
+	char *tmp;
+	int		i;
+
+	if (str[0] != '\'' && str[0] != '"')
+		return (str);
+	else 
+	{
+		i = 1;
+		while (str[i])
+		{
+			if (str[i] == '\'' || str[i] == '"')
+				break ;
+			i++;
+		}
+	}
+	tmp =  str;
+	str = ft_strsub(str, 1, i - 1);
+	ft_strdel(&tmp);
+	return (str);
+}
+
 void aliasmatched(char **args)
 {
 	t_aliaspkg *data;
@@ -14,7 +37,8 @@ void aliasmatched(char **args)
 		if (ft_strcmp(curr->shortcut, tmp) == 0)
 		{
 			ft_strdel(&args[0]);
-			args[0] = ft_strdup(curr->cmd);
+			args[0] = handleqoutes(ft_strdup(curr->cmd));
+			// args[0] = ft_strdup(curr->cmd);
 			break ;
 		}
 		curr = curr->next;
@@ -30,8 +54,10 @@ void printlist()
 	curr = data->head_ref;
 	while (curr)
 	{
-		ft_putstr(curr->shortcut);
-		ft_putendl(curr->cmd);
+		ft_putstr_fd(curr->shortcut, 1);
+		(curr->cmd[0] != '\'') ? ft_putchar_fd('\'', 1) : 0;
+		ft_putstr_fd(curr->cmd, 1);
+		(curr->cmd[ft_strlen(curr->cmd) - 1] != '\'') ? ft_putendl_fd("\'", 1) : ft_putchar_fd('\n', 1);
 		curr = curr->next;
 	}
 }
@@ -51,7 +77,9 @@ void printelement(char *shortcut)
 		{
 			ft_putstr_fd("alias ", 1);
 			ft_putstr_fd(curr->shortcut, 1);
-			ft_putendl_fd(curr->cmd, 1);
+			(curr->cmd[0] != '\'') ? ft_putchar_fd('\'', 1) : 0;
+			ft_putstr_fd(curr->cmd, 1);
+			(curr->cmd[ft_strlen(curr->cmd) - 1] != '\'') ? ft_putendl_fd("\'", 1) : ft_putchar_fd('\n', 1);
 			ft_strdel(&tmp);
 			return ;
 		}
@@ -60,33 +88,16 @@ void printelement(char *shortcut)
 	ft_print_error("not found", "42sh: alias: ", shortcut, 0);
 }
 
-int isequalfound(char *arg)
-{
-	if (arg[0] == '=')
-		return (0);
-	while (*arg)
-	{
-		if (*arg == '=')
-			return (1);
-		arg++;
-	}
-	return (0);
-}
-
 /*
 ** export alias
 */
 
-void            ft_buil_alias(t_tokens *st_tokens)
+void 			ft_buil_alias_2(t_tokens *st_tokens, char *arg, char *tmp, int i)
 {
-    int i;
-    char    *arg;
+	int j;
 
-    i = 1;
-    arg = NULL;
-    st_tokens = st_tokens->next;
-    (!st_tokens) ? printlist() : NULL;
-    while (st_tokens)
+	i = 1;
+	 while (st_tokens)
     {
         if (st_tokens->indx == i)
         {
@@ -96,8 +107,11 @@ void            ft_buil_alias(t_tokens *st_tokens)
                 arg = ft_strjoir(arg, NEXT->value, 1);
                 if (NEXT && NEXT->next && NEXT->next->indx == st_tokens->indx)
                     arg = ft_strjoir(arg, NEXT->next->value, 1);
-				printf("arg = %s \n",arg);
-				removealiasbyelemorbyflag(arg, 0);
+				j = 0;
+				while (arg[j] && arg[j] != '=')
+					j++;
+				tmp = ft_strsub(arg, 0, j);
+				removealiasbyelemorbyflag(tmp, 0);
                 pushtolist(arg, 0);
                 ft_strdel(&arg);
             }
@@ -107,4 +121,21 @@ void            ft_buil_alias(t_tokens *st_tokens)
 		}
         st_tokens = st_tokens->next;
     }
+}
+
+void            ft_buil_alias(t_tokens *st_tokens)
+{
+    st_tokens = st_tokens->next;
+    if (!st_tokens)
+	{
+		printlist();
+		return ;
+	}
+	if (st_tokens->value[0] == '-')
+	{
+		ft_print_error(" invalid option", "42sh: alias: ", st_tokens->value, 0);
+		ft_print_error("alias [name[=value] ... ]", NULL, "alias: usage: ",0);
+		return ;
+	}
+	ft_buil_alias_2(st_tokens, NULL, NULL, 0);
 }
