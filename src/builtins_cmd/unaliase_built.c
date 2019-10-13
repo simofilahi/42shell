@@ -90,7 +90,10 @@ int	ft_buil_unalias(t_tokens *st_token)
 	int		flag;
 
 	(st_token) ? (st_token = st_token->next) : NULL;
-	(!st_token) ? ft_print_error("unalias: usage: ", "42sh:", "[-a] [name[=value] ... ]", 0) : 0;
+	if (!st_token) {
+		ft_print_error("unalias: usage: ", "42sh:", "[-a] [name[=value] ... ]", 0);
+		return (0);
+	}
 	if ((ft_strcmp(st_token->value, "-a") == 0) ? freealiaslist() : 0)
 	 	return (0);
 	flag = 0;
